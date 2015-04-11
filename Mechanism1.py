@@ -7,9 +7,9 @@ n = 10
 
 #Settings
 t = 0
-p = 10 #Depends on the MAB
+p = 1 #Depends on the MAB
 Nt = {}
-kt = np.array([1,1,4,0,1]) #depends on the MAB
+kt = np.array([0,1,4,0,1]) #depends on the MAB
 k = np.sum(kt) #number of items left
 alpha = np.floor(log10(n))
 
@@ -22,7 +22,7 @@ P = np.zeros((i_len))
 for i in range (1,i_len):
 	P[i] = d*(1+d)**i 
 
-#Initialize arrays
+#Initialize lists
 St = []
 rt = []
 It = []
@@ -35,10 +35,10 @@ while (k >= 1):
 	else:
 		Nt[p] += 1;
 
-	St.extend([kt[t] / Nt[p]])
-	rt.extend([(alpha / (Nt[p] + 1)) + np.sqrt((alpha*St[t])/(Nt[p]+1))])
+	St.extend([ float(kt[t]) / float(Nt[p])])
+	rt.extend([( float(alpha) / float((Nt[p] + 1))) + np.sqrt((float(alpha*St[t]))/float((Nt[p]+1)))])
 	It.extend([p * np.min((k, n*(St[t] + rt[t])))])
-	p = np.argmax(It[t])
+	p = np.argmax(It) + 1
 	k = k - kt[t]
 
 	#Increment the current round number
