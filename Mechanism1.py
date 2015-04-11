@@ -4,9 +4,6 @@ from math import log10
 #Set number of agents
 n = 10
 
-#Set k
-k = 5
-
 #Delta function
 d = (k**(-1/3)) * (log10(n))**(2/3)
 
@@ -16,10 +13,18 @@ P = np.zeros(1,i_len)
 for i in range (1,i_len):
 	P[i] = d*(1+d)^i 
 
+#Settings
 t = 0
 p = 10 #Depends on the MAB
 Nt = {}
-kt = np.array([1,1,0,0,0,1,1]) #depends on the MAB
+kt = np.array([1,1,4,0,1]) #depends on the MAB
+k = np.sum(kt) #number of items left
+
+#Initialize arrays
+St = []
+rt = []
+It = []
+
 while (k >= 1):
 
 	#Update the Nt dictionary
@@ -28,11 +33,11 @@ while (k >= 1):
 	else:
 		Nt[p] += 1;
 
-	St(p) = kt(p) / Nt[p]
-	rt(p) = alpha / (Nt[p] + 1) + np.sqrt((alpha*St(p))/(Nt[p]+1))
-	It = p * np.min(k, n*(St(p) + rt(p)))
-	p = np.argmax(It(p))
-	k -= 1
+	St.extend([kt[t] / Nt[p]])
+	rt.extend(alpha / (Nt[p] + 1) + np.sqrt((alpha*St[t])/(Nt[p]+1)))
+	It.extend(p * np.min(k, n*(St[t] + rt[t])))
+	p = np.argmax(It[t])
+	k = k - kt[t]
 
 	#Increment the current round number
 	t += 1
