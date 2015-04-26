@@ -89,3 +89,6 @@ class BanditArm:
 	#Update the value of K
 	def update_k(self,p):
 		self.k -= self.kt[p]
+
+
+		
