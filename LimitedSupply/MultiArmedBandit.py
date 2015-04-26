@@ -10,11 +10,11 @@ i = 10
 n = 100
 
 #Initialize bandits
-arm1 = BanditArm(k[0],n,i)
-arm2 = BanditArm(k[1],n,i)
-arm3 = BanditArm(k[2],n,i)
-arm4 = BanditArm(k[3],n,i)
-arm5 = BanditArm(k[4],n,i)
+arm1 = BanditArm(k[0],n,i,1)
+arm2 = BanditArm(k[1],n,i,1)
+arm3 = BanditArm(k[2],n,i,1)
+arm4 = BanditArm(k[3],n,i,1)
+arm5 = BanditArm(k[4],n,i,1)
 
 #Randomly choose each customer's "ideal" price
 max_price = np.max([arm1.P, arm2.P, arm3.P, arm4.P, arm5.P])
@@ -150,6 +150,7 @@ ax.plot(arm2_kt_df['Price'],arm2_kt_df['N_sold'],'r')
 ax.plot(arm3_kt_df['Price'],arm3_kt_df['N_sold'],'g')
 ax.plot(arm4_kt_df['Price'],arm4_kt_df['N_sold'],'k')
 ax.plot(arm5_kt_df['Price'],arm5_kt_df['N_sold'],'m')
+ax.legend(['Arm 1', 'Arm 2', 'Arm 3', 'Arm 4', 'Arm 5'])
 ax.set_title('Price vs. Number of Items Sold')
 ax.set_xlabel('Price')
 ax.set_ylabel('Number of Items Sold')
@@ -160,10 +161,11 @@ t_vector = np.arange(t)
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.plot(t_vector,price_per_round)
-ax.legend(['Arm 1', 'Arm 2', 'Arm 3', 'Arm 4', 'Arm 5'])
+ax.legend(['Arm 1', 'Arm 2', 'Arm 3', 'Arm 4', 'Arm 5'],loc=4)
 ax.set_title('Price per Round')
 ax.set_xlabel('Round')
 ax.set_ylabel('Price')
+#ax.set_ylim([0,360])
 plt.show()
 
 #Plot price per round

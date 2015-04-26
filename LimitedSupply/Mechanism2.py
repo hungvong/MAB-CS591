@@ -10,7 +10,7 @@ def Mechanism2(epsilon, delta, alpha, gamma):
 
 	#Settings
 	l = -1
-	pl = 1 #Depends on the MAB
+	#pl = 1 #Depends on the MAB
 	p_list = [] #Saves history of prices, per round
 
 	#Initialize lists
@@ -25,11 +25,10 @@ def Mechanism2(epsilon, delta, alpha, gamma):
 
 	while (True):
 
-		p_list.extend([pl])
-
 		#Compute l and pl
 		l = l + 1
 		pl = (1.+delta)**(-l)
+		p_list.extend([pl])
 
 		#                                       n
 		#Offer price pl to m = delta * ----------------------- agents
