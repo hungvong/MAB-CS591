@@ -16,6 +16,10 @@ arm3 = BanditArm(k[2],n,i)
 arm4 = BanditArm(k[3],n,i)
 arm5 = BanditArm(k[4],n,i)
 
+#Randomly choose each customer's "ideal" price
+max_price = np.max([arm1.P, arm2.P, arm3.P, arm4.P, arm5.P])
+ideal_prices = np.random.random(n) * (max_price + 1)
+
 
 #Initialize overall min price and round index
 overall_minimum_price = 50000
@@ -57,6 +61,9 @@ while (k_total >= 1):
 			min_price = p[ll]
 			min_indx = ll
 
+	if (min_price == 50000):
+		break;
+
 	#Keep track of the bandit prices per round
 	temp = np.copy(p)
 
@@ -65,48 +72,74 @@ while (k_total >= 1):
 			temp[value] = 0
 	price_per_round.append(temp)
 
+	#Check if each player's ideal value is greater than the current price
+	item_bought = False
+	for yy in range (0,len(ideal_prices)):
+		if (ideal_prices[yy] >= min_price):
+			ideal_prices = np.delete(ideal_prices,yy) #remove the buyer from the list
+			item_bought = True
+			break;
+
+
 	#Keep track of the overall minimum price and the round in which it occurs
 	if (min_price < overall_minimum_price):
 		overall_minimum_price = min_price
 		overall_minimum_round = t
 	
-	#Update k_total
-	if (min_indx == 0):
-		arm1.update_k(min_price)
-		k_total -= arm1.kt[min_price]
+	#Update k_total if an item is bought
+	if (item_bought):
+		if (min_indx == 0):
+			arm1.update_k(min_price)
+			arm1.update_kt(min_price)
 
-	elif (min_indx == 1):
-		arm2.update_k(min_price)
-		k_total -= arm2.kt[min_price]
-	
-	elif (min_indx == 2):
-		arm3.update_k(min_price)
-		k_total -= arm3.kt[min_price]
+		elif (min_indx == 1):
+			arm2.update_k(min_price)
+			arm2.update_kt(min_price)
+		
+		elif (min_indx == 2):
+			arm3.update_k(min_price)
+			arm3.update_kt(min_price)
 
-	elif (min_indx == 3):
-		arm4.update_k(min_price)
-		k_total -= arm4.kt[min_price]
+		elif (min_indx == 3):
+			arm4.update_k(min_price)
+			arm4.update_kt(min_price)
 
-	elif (min_indx == 4):
-		arm5.update_k(min_price)
-		k_total -= arm5.kt[min_price]
+		elif (min_indx == 4):
+			arm5.update_k(min_price)
+			arm5.update_kt(min_price)
+
+
+		k_total -= 1
+
+		#Decrement n
+		arm1.decrement_n()
+		arm2.decrement_n()
+		arm3.decrement_n()
+		arm4.decrement_n()
+		arm5.decrement_n()
+
+		n -= 1
 
 	#Increment round number
 	t += 1
+	print "t =",t
+	print "n =",n
+	print "k_total = ",k_total
+	print "====================="
 
-print t
-
+	if (n == 0):
+		break;
 
 #Plot the results
 arm1_kt_df = pd.DataFrame(arm1.kt.items(),columns=['Price','N_sold'])
 arm1_kt_df = arm1_kt_df.sort(['Price'])
-arm2_kt_df = pd.DataFrame(arm1.kt.items(),columns=['Price','N_sold'])
+arm2_kt_df = pd.DataFrame(arm2.kt.items(),columns=['Price','N_sold'])
 arm2_kt_df = arm2_kt_df.sort(['Price'])
-arm3_kt_df = pd.DataFrame(arm1.kt.items(),columns=['Price','N_sold'])
+arm3_kt_df = pd.DataFrame(arm3.kt.items(),columns=['Price','N_sold'])
 arm3_kt_df = arm3_kt_df.sort(['Price'])
-arm4_kt_df = pd.DataFrame(arm1.kt.items(),columns=['Price','N_sold'])
+arm4_kt_df = pd.DataFrame(arm4.kt.items(),columns=['Price','N_sold'])
 arm4_kt_df = arm4_kt_df.sort(['Price'])
-arm5_kt_df = pd.DataFrame(arm1.kt.items(),columns=['Price','N_sold'])
+arm5_kt_df = pd.DataFrame(arm5.kt.items(),columns=['Price','N_sold'])
 arm5_kt_df = arm5_kt_df.sort(['Price'])
 
 #Price vs. # of Items Sold

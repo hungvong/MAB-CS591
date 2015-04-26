@@ -37,16 +37,10 @@ class BanditArm:
 
 		self.P = P
 
-		#Randomly choose each customer's "ideal" price
-		max_price = np.max(P)
-		self.ideal_prices = np.random.random(n) * (max_price + 1)
-
 		#Number of items sold per price
 		self.kt = dict()
-		test = 9
 		for price in P:
-			self.kt[price] = test
-			test -= 1
+			self.kt[price] = 0
 
 	#Find the p that minimizes It
 	def minimizeIt(self):
@@ -80,6 +74,7 @@ class BanditArm:
 
 			#Add chosen price to Nt
 			self.Nt[p] += 1
+			self.kt[p] 
 
 			return p
 
@@ -90,5 +85,17 @@ class BanditArm:
 	def update_k(self,p):
 		self.k -= self.kt[p]
 
+	#Update kt
+	def update_kt(self,p):
+		self.kt[p] += 1
+
+	#Update n and alpha
+	def decrement_n(self):
+		self.n -= 1
+
+		try:
+			self.alpha = np.floor(log10(float(self.n)))
+		except ValueError:
+			self.alpha = 0
 
 		
