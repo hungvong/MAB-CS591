@@ -110,7 +110,7 @@ class BanditArm:
 			# ======== Compute Alpha, Delta, Epsilon, and Delta ======== #
 			self.epsilon = k**(-0.25) #Compute epsilon
 			self.delta2 = ((1./k) * log10(k))**(0.25) #Delta function
-			self.alpha2 =  (float(k)/float(n))**(1-self.delta) #Compute alpha
+			self.alpha2 =  (float(k)/float(n))**(1-self.delta2) #Compute alpha
 			self.gamma = np.min((self.alpha2, 1./math.e)) #Compute gamma
 
 			# =============== Initialize these variables =============== #
@@ -167,11 +167,14 @@ class BanditArm:
 
 	#Update the value of K
 	def update_k(self,p):
-		self.k -= self.kt[p]
+		self.k -= 1
 
 	#Update kt
 	def update_kt(self,p):
-		self.kt[p] += 1
+		if (p in self.kt):
+			self.kt[p] += 1
+		else:
+			self.kt[p] = 1
 
 	#Update n and alpha
 	def decrement_n(self):

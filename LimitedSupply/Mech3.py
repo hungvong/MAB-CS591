@@ -23,6 +23,14 @@ ideal_prices = np.random.random(n) * (max_price + 1)
 
 #============== Initialize Mech 1 ================#
 
+
+#Initialize bandits
+arm1 = BanditArm(k[0],n,i,3)
+arm2 = BanditArm(k[1],n,i,3)
+arm3 = BanditArm(k[2],n,i,3)
+arm4 = BanditArm(k[3],n,i,3)
+arm5 = BanditArm(k[4],n,i,3)
+
 #Randomly choose each customer's "ideal" price
 max_price = np.max([arm1.P, arm2.P, arm3.P, arm4.P, arm5.P])
 ideal_prices = np.random.random(n) * (max_price + 1)
@@ -39,14 +47,6 @@ k_total = np.sum(k)
 price_per_round = []
 
 
-#Initialize bandits
-arm1 = BanditArm(k[0],n,i,3)
-arm2 = BanditArm(k[1],n,i,3)
-arm3 = BanditArm(k[2],n,i,3)
-arm4 = BanditArm(k[3],n,i,3)
-arm5 = BanditArm(k[4],n,i,3)
-
-
 while (k_total >= 1):
 #if (True):
 
@@ -58,12 +58,6 @@ while (k_total >= 1):
 
 
 	#============= MECHANISM 1 =============#
-
-	arm1_items_left.extend([arm1.k])
-	arm2_items_left.extend([arm2.k])
-	arm3_items_left.extend([arm3.k])
-	arm4_items_left.extend([arm4.k])
-	arm5_items_left.extend([arm5.k])
 
 	#Maximize It for each bandit arm
 	p[0] = arm1.minimizeIt()
@@ -171,19 +165,19 @@ while (k_total >= 1):
 	#Find max price
 	max_price_mech2 = -1
 
-	if (arm1.p_list[arm1.l_max] > max_price_mech2):
+	if (arm1.p_list2[arm1.l_max] > max_price_mech2):
 		max_price_mech2 = arm1.p_list2[arm1.l_max]
 
-	if (arm2.p_list[arm2.l_max] > max_price_mech2):
+	if (arm2.p_list2[arm2.l_max] > max_price_mech2):
 		max_price_mech2 = arm2.p_list2[arm2.l_max]
 
-	if (arm3.p_list[arm3.l_max] > max_price_mech2):
+	if (arm3.p_list2[arm3.l_max] > max_price_mech2):
 		max_price_mech2 = arm3.p_list2[arm3.l_max]
 
-	if (arm4.p_list[arm4.l_max] > max_price_mech2):
+	if (arm4.p_list2[arm4.l_max] > max_price_mech2):
 		max_price_mech2 = arm4.p_list2[arm4.l_max]
 
-	if (arm5.p_list[arm5.l_max] > max_price_mech2):
+	if (arm5.p_list2[arm5.l_max] > max_price_mech2):
 		max_price_mech2 = arm5.p_list2[arm5.l_max]
 
 
@@ -203,24 +197,24 @@ while (k_total >= 1):
 	#Update k_total if an item is bought
 	if (item_bought):
 		if (min_indx == 0):
-			arm1.update_k(min_price*max_price_mech2)
 			arm1.update_kt(min_price*max_price_mech2)
+			arm1.update_k(min_price*max_price_mech2)
 
 		elif (min_indx == 1):
-			arm2.update_k(min_price*max_price_mech2)
 			arm2.update_kt(min_price*max_price_mech2)
+			arm2.update_k(min_price*max_price_mech2)
 		
 		elif (min_indx == 2):
-			arm3.update_k(min_price*max_price_mech2)
 			arm3.update_kt(min_price*max_price_mech2)
+			arm3.update_k(min_price*max_price_mech2)
 
 		elif (min_indx == 3):
-			arm4.update_k(min_price*max_price_mech2)
 			arm4.update_kt(min_price*max_price_mech2)
+			arm4.update_k(min_price*max_price_mech2)
 
 		elif (min_indx == 4):
-			arm5.update_k(min_price*max_price_mech2)
 			arm5.update_kt(min_price*max_price_mech2)
+			arm5.update_k(min_price*max_price_mech2)
 
 
 		k_total -= 1
@@ -235,4 +229,47 @@ while (k_total >= 1):
 		n -= 1
 
 	#Increment round number
+	print "-----------------------------"
+	print " End of round %d." % t
+	print "-----------------------------"
 	t += 1
+
+
+
+#Plot the results
+arm1_kt_df = pd.DataFrame(arm1.kt.items(),columns=['Price','N_sold'])
+arm1_kt_df = arm1_kt_df.sort(['Price'])
+arm2_kt_df = pd.DataFrame(arm2.kt.items(),columns=['Price','N_sold'])
+arm2_kt_df = arm2_kt_df.sort(['Price'])
+arm3_kt_df = pd.DataFrame(arm3.kt.items(),columns=['Price','N_sold'])
+arm3_kt_df = arm3_kt_df.sort(['Price'])
+arm4_kt_df = pd.DataFrame(arm4.kt.items(),columns=['Price','N_sold'])
+arm4_kt_df = arm4_kt_df.sort(['Price'])
+arm5_kt_df = pd.DataFrame(arm5.kt.items(),columns=['Price','N_sold'])
+arm5_kt_df = arm5_kt_df.sort(['Price'])
+
+#Price vs. # of Items Sold
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(arm1_kt_df['Price'],arm1_kt_df['N_sold'])
+ax.plot(arm2_kt_df['Price'],arm2_kt_df['N_sold'],'r')
+ax.plot(arm3_kt_df['Price'],arm3_kt_df['N_sold'],'g')
+ax.plot(arm4_kt_df['Price'],arm4_kt_df['N_sold'],'k')
+ax.plot(arm5_kt_df['Price'],arm5_kt_df['N_sold'],'m')
+ax.legend(['Arm 1', 'Arm 2', 'Arm 3', 'Arm 4', 'Arm 5'])
+ax.set_title('Price vs. Number of Items Sold')
+ax.set_xlabel('Price')
+ax.set_ylabel('Number of Items Sold')
+plt.show()
+
+#Number of Items left
+t_vector = np.arange(t)
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(t_vector,price_per_round)
+ax.legend(['Arm 1', 'Arm 2', 'Arm 3', 'Arm 4', 'Arm 5'],loc=4)
+ax.set_title('Price per Round')
+ax.set_xlabel('Round')
+ax.set_ylabel('Price')
+#ax.set_ylim([0,360])
+plt.show()
