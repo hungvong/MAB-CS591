@@ -7,14 +7,14 @@ import matplotlib.pyplot as plt
 #============== Initialize Mech 2 ================#
 
 #Initialize variables
-k = [7, 8, 14, 9, 28]
+k = [42,46,13,63,57]
 i = 10
 
 #Initialize p and find k_total
 pl = np.zeros(5)
 m = np.zeros(5)
 k_total = np.sum(k)
-n = 10^(k_total)
+n = 250 #10^(k_total)
 
 #Randomly choose each customer's "ideal" price
 max_price = 1
@@ -256,7 +256,7 @@ ax.plot(arm2_kt_df['Price'],arm2_kt_df['N_sold'],'r')
 ax.plot(arm3_kt_df['Price'],arm3_kt_df['N_sold'],'g')
 ax.plot(arm4_kt_df['Price'],arm4_kt_df['N_sold'],'k')
 ax.plot(arm5_kt_df['Price'],arm5_kt_df['N_sold'],'m')
-ax.legend(['Arm 1', 'Arm 2', 'Arm 3', 'Arm 4', 'Arm 5'])
+ax.legend(['Arm 1', 'Arm 2', 'Arm 3', 'Arm 4', 'Arm 5'],loc='center left', bbox_to_anchor=(1, 0.5))
 ax.set_title('Price vs. Number of Items Sold')
 ax.set_xlabel('Price')
 ax.set_ylabel('Number of Items Sold')
@@ -267,7 +267,7 @@ t_vector = np.arange(t)
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.plot(t_vector,price_per_round)
-ax.legend(['Arm 1', 'Arm 2', 'Arm 3', 'Arm 4', 'Arm 5'],loc=4)
+ax.legend(['Arm 1', 'Arm 2', 'Arm 3', 'Arm 4', 'Arm 5'],loc='center left', bbox_to_anchor=(1, 0.5))
 ax.set_title('Price per Round')
 ax.set_xlabel('Round')
 ax.set_ylabel('Price')

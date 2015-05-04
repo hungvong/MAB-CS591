@@ -51,7 +51,9 @@ class BanditArm:
 
 			# ======== Compute Alpha, Delta, Epsilon, and Delta ======== #
 			self.epsilon = k**(-0.25) #Compute epsilon
-			self.delta2 = ((1./k) * log10(k))**(0.25) #Delta function
+			#self.delta2 = ((1./k) * log10(k))**(0.25) #Delta function
+			#import pdb; pdb.set_trace()
+			self.delta2 =  ((1./k)*log10(k)*log10(1./self.epsilon)*log10(1./self.epsilon)**2)**(0.25)
 			self.alpha2 =  (float(k)/float(n))**(1-self.delta2) #Compute alpha
 			self.gamma = np.min((self.alpha2, 1./math.e)) #Compute gamma
 
@@ -66,7 +68,7 @@ class BanditArm:
 			#Initialize lists
 			self.Sl_list = [] #Saves history of Sl, per round
 			self.Rl_list = [] #Saves history of Rl, per round
-			self.p_list = [] #Saves history of prices, per round
+			self.p_list2 = [] #Saves history of prices, per round
 
 		#Combination of mechanism 1 and 2 -- call it "mechanism 3"
 		elif (mechanism == 3):
@@ -209,7 +211,7 @@ class BanditArm:
 		accept = 0.
 		total = 0.
 		for agent in range (0,int(m)):
-			if (ideal_prices[agent] > pl):
+			if (ideal_prices[agent] >= pl):
 				accept += 1
 
 			total += 1
@@ -217,6 +219,7 @@ class BanditArm:
 		self.Sl_list.extend([self.Sl])
 
 		self.Rl = pl * self.Sl
-		self.p_list2.extend([pl])
+
+		return self.Sl
 
 
